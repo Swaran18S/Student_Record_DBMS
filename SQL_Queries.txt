@@ -1,0 +1,89 @@
+----------1. Statement using Projection arithmetic (expressions) 
+SELECT  
+    Passport_ID, 
+    Visa_Type, 
+    First_Name, 
+    Last_Name, 
+    Date_of_Birth, 
+    Email_ID, 
+    Phone_Number, 
+    Nationality, 
+    (Phone_Number / 2) AS Half_Phone_Number 
+FROM Visa; 
+ ----2. Statement using Alias  
+SELECT  
+    v.Passport_ID AS ID, 
+    v.First_Name || ' ' || v.Last_Name AS Full_Name, 
+    t.Duration_Of_Stay AS Stay_Duration, 
+    t.Intended_Arrival_Date AS Arrival_Date 
+FROM Visa v 
+JOIN Tourist t ON v.Passport_ID = t.Passport_ID; 
+ ----3. Statement using Concatenation 
+SELECT  
+    First_Name || ' ' || Last_Name AS Full_Name 
+FROM Visa; 
+ ----4. Statement using The WHERE Clause 
+SELECT *  
+FROM Visa 
+WHERE Nationality = 'India'; ----5. Statement using Comparison Operators (Greater than...) 
+SELECT * 
+FROM Student 
+WHERE Student_ID > 50000000; ----6. Statement using Logical Operators (AND |OR 
+SELECT * 
+FROM Student s 
+LEFT JOIN FinancialAid fa ON s.Student_ID = fa.Student_ID 
+LEFT JOIN Scholarship sch ON fa.FinancialAidID = sch.FinancialAidID 
+LEFT JOIN Employment emp ON s.Student_ID = emp.Student_ID 
+WHERE (sch.CGPA > 3.0 OR emp.Department = 'Dining'); ----7. Statement using Date Functions 
+SELECT * 
+FROM Student 
+WHERE Visa_Expiration_Date > SYSDATE; ----8. Statement using IN & subquery 
+SELECT * 
+FROM Visa 
+WHERE Nationality IN (SELECT Nationality FROM Visa WHERE Nationality = 'India' OR Nationality = 'Egypt'); -----9. Statement using LIKE OPERATOR 
+SELECT * 
+FROM Visa 
+WHERE Email_ID LIKE '%.com'; ----10. Statement using AGGREGATION FUNCTIONS & GROUP BY 
+SELECT Section.Course_ID, Course.Course_Name, COUNT(Enrollment.Student_ID) AS Total_Students 
+FROM Section 
+JOIN Enrollment ON Section.Section_ID = Enrollment.Section_ID 
+JOIN Course ON Section.Course_ID = Course.Course_ID 
+GROUP BY Section.Course_ID, Course.Course_Name; 
+ ----11. Statement using GROUP BY & HAVING 
+SELECT Course.Course_ID, Course.Course_Name, COUNT(Enrollment.Enrollment_ID) AS Enrollment_Count 
+FROM Course 
+JOIN Section ON Course.Course_ID = Section.Course_ID 
+JOIN Enrollment ON Section.Section_ID = Enrollment.Section_ID 
+GROUP BY Course.Course_ID, Course.Course_Name 
+HAVING COUNT(Enrollment.Enrollment_ID) >= 2; 
+ ----12. Statement using Conditional Expressions 
+SELECT Passport_ID,  
+       First_Name,  
+       Last_Name,  
+       CASE  
+           WHEN Visa_Type = 'F-1' THEN 'Student Visa'  
+           WHEN Visa_Type = 'B-2' THEN 'Tourist Visa'  
+           ELSE 'Other'  
+       END AS Visa_Category  
+FROM Visa; 
+ ----13. Statement using "Union" & another statement having same results using any JOIN 
+SELECT Passport_ID FROM Visa 
+UNION 
+SELECT Passport_ID FROM Tourist; 
+ 
+SELECT DISTINCT v.Passport_ID  
+FROM Visa v 
+JOIN Tourist t ON v.Passport_ID = t.Passport_ID; ----14. Statement using "Minus" & another statement having same results using any JOIN 
+SELECT Passport_ID FROM Visa 
+MINUS 
+SELECT Passport_ID FROM Tourist; 
+SELECT v.Passport_ID 
+FROM Visa v 
+LEFT JOIN Tourist t ON v.Passport_ID = t.Passport_ID 
+WHERE t.Passport_ID IS NULL; ----15. Statement using "INTERSECT" & another statement having same results using any JOIN 
+SELECT Passport_ID FROM Visa 
+INTERSECT 
+SELECT Passport_ID FROM Tourist; 
+SELECT v.Passport_ID 
+FROM Visa v 
+INNER JOIN Tourist t ON v.Passport_ID = t.Passport_ID;
